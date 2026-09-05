@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alertes Météo 48h : Carte de Vigilance (HARMONIE &amp; AROME) — reproduction</title>
+    <meta name="description" content="Reproduction à l'identique de la carte de vigilance météo non officielle basée sur le modèle haute résolution AROME ET HARMONIE (KNMI).">
+    <link rel="stylesheet" href="assets/harmonie-risques.css">
+    <style>
+        /* Habillage minimal de la page de démonstration — le widget lui-même
+           est strictement celui du plugin d'origine (assets/). */
+        body { margin: 0; background: #eef1f5; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+        .demo-shell { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; }
+        .demo-shell > p.note {
+            background: #fff8e1; border: 1px solid #f0df9a; border-radius: 8px;
+            padding: 10px 14px; font-size: 13px; line-height: 1.5; color: #5a4a1a;
+        }
+        .demo-shell > p.note code { background: #f7efcf; padding: 1px 5px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+<div class="demo-shell">
+
+    <p class="note">
+        ⚙️ <strong>Données :</strong> cette carte charge <code>risques.json</code> depuis
+        <code>data-base-url</code> (voir l'attribut sur la balise <code>section</code> ci-dessous).
+        Par défaut : la branche <code>data</code> officielle du projet d'origine
+        (données strictement identiques au site alertes-meteo.com). Pour un fonctionnement
+        hors-ligne/autonome, servez ce dossier en HTTP et remplacez la valeur par <code>data</code>
+        (le fichier <code>data/risques.json</code> fourni est alors utilisé).
+    </p>
+
+    <!-- ====================================================================
+         Marquage IDENTIQUE à la sortie du shortcode [harmonie_risques] du
+         plugin open source harmonie-risques-widget (GPL-2.0-or-later),
+         v2.16.0 — reproduction fidèle de alertes-meteo.com/cartes-meteo/
+         harmonie-alertes/ (mêmes données, mêmes seuils, même rendu).
+         ==================================================================== -->
+    <section
+        class="hrw-card"
+        data-hrw-app
+        data-base-url="https://raw.githubusercontent.com/monsieurmeteo/risques/data"
+        data-geojson-url="assets/departements-france.geojson"
+        data-littoral-url="assets/littoral-coastline.geojson"
+        data-default-department=""
+        data-default-hazard="orages"
+        data-timezone="Europe/Paris"
+    >
+        <header class="hrw-header">
+            <div class="hrw-header-row">
+                <div>
+                    <p class="hrw-kicker">VIGILANCE NON OFFICIELLE • MODÈLE HARMONIE / AROME</p>
+                    <h2>Vigilance météo (bêta)</h2>
+                    <p class="hrw-meta" data-hrw-run>Chargement du dernier run…</p>
+                    <button type="button" class="hrw-locate-button" data-hrw-locate>📍 Me géolocaliser</button>
+                </div>
+                <div class="hrw-national-summary" data-hrw-national-summary hidden>
+                    <p class="hrw-national-summary-title" data-hrw-national-summary-title>France — J0</p>
+                    <dl>
+                        <div><dt>Maxi</dt><dd data-hrw-summary-max></dd></div>
+                        <div><dt>Mini</dt><dd data-hrw-summary-min></dd></div>
+                        <div><dt>Rafales maxi</dt><dd data-hrw-summary-gust></dd></div>
+                        <div><dt>Pluie maxi</dt><dd data-hrw-summary-precip></dd></div>
+                    </dl>
+                </div>
+            </div>
+        </header>
+
+        <div class="hrw-toolbar">
+            <div class="hrw-hazard-tabs" role="tablist" aria-label="Aléa" data-hrw-hazard-tabs></div>
+            <div class="hrw-day-tabs" role="tablist" aria-label="Échéance" data-hrw-day-tabs></div>
+        </div>
+
+        <div class="hrw-body">
+            <div class="hrw-map-wrap">
+                <div class="hrw-map-row">
+                    <div class="hrw-map-primary">
+                        <svg class="hrw-map" data-hrw-map viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Carte des départements de France"></svg>
+                        <div class="hrw-map-loading" data-hrw-map-loading>Chargement de la carte…</div>
+                    </div>
+                    <div class="hrw-map-inset-column">
+                        <div class="hrw-map-inset-wrap">
+                            <svg class="hrw-inset-map" data-hrw-inset-map viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Carte détaillée de l’Île-de-France"></svg>
+                            <span class="hrw-inset-label">Île-de-France</span>
+                        </div>
+                        <div class="hrw-map-tools">
+                            <button type="button" data-hrw-capture title="Capturer l’image affichée">📷 Capture PNG</button>
+                            <button type="button" data-hrw-copy title="Copier la vue dans le presse-papiers">📋 Copier la vue</button>
+                        </div>
+                        <p class="hrw-legend-title" data-hrw-legend-title></p>
+                    </div>
+                </div>
+                <div class="hrw-legend" data-hrw-legend></div>
+            </div>
+
+            <div class="hrw-detail" data-hrw-detail>
+                <p class="hrw-detail-placeholder" data-hrw-detail-placeholder>Cliquez sur un département ou recherchez une commune.</p>
+                <div class="hrw-detail-content" data-hrw-detail-content hidden>
+                    <h3 data-hrw-detail-title></h3>
+                    <div class="hrw-detail-grid" data-hrw-detail-grid></div>
+                    <div class="hrw-frise" data-hrw-frise>
+                        <h4>Frise horaire — <span data-hrw-frise-hazard></span></h4>
+                        <div class="hrw-frise-track" data-hrw-frise-track></div>
+                        <div class="hrw-frise-labels" data-hrw-frise-labels></div>
+                    </div>
+                    <div class="hrw-advice" data-hrw-advice>
+                        <h4>Détails des phénomènes</h4>
+                        <p class="hrw-advice-subtitle">Bonnes pratiques</p>
+                        <p class="hrw-advice-text" data-hrw-advice-text></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="hrw-footer">
+            <span data-hrw-generated>Mise à jour en cours de lecture…</span>
+            <span>
+                Données dérivées de
+                <a href="https://dataplatform.knmi.nl/dataset/harmonie-arome-cy43-p3-1-0" target="_blank" rel="noopener noreferrer">HARMONIE-AROME Cy43 (KNMI)</a>
+                • Contours départementaux : IGN / data.gouv.fr (licence ouverte)
+            </span>
+            <span class="hrw-plugin-version">Plugin Vigilance HARMONIE v2.16.0 (2026-09-03)</span>
+        </footer>
+
+        <noscript>
+            <p class="hrw-message hrw-error">JavaScript doit être activé pour afficher la carte de vigilance.</p>
+        </noscript>
+    </section>
+
+</div>
+
+<script src="assets/harmonie-risques.js"></script>
+</body>
+</html>
